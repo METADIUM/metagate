@@ -4,6 +4,8 @@ import { Table, Input, Modal, Button, Radio, Form, Row, Col, Progress, message }
 import { SendTransaction } from 'metasdk-react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
+import web3 from '../ethereum/web3'
+
 import { columns } from './columns'
 import * as util from '../util'
 
@@ -18,7 +20,7 @@ class Topic extends React.Component {
     inputValidData: {},
     loadedTopicCnt: 0,
     totalTopicCnt: 1
-  };
+  }
 
   state = {
     addModalVisible: false,
@@ -27,7 +29,7 @@ class Topic extends React.Component {
     didSort: false,
     didSearch: false,
     loading: false
-  };
+  }
 
   componentWillMount () {
     if (this.data.users.length > 0) return
@@ -159,7 +161,10 @@ class Topic extends React.Component {
           <h1>Scan QR Code to Add New Topic</h1>
           <SendTransaction
             id='sendTransaction'
-            request={this.props.contracts.topicRegistry.registerTopic(Buffer.from(this.data.newTopicItem.title), Buffer.from(this.data.newTopicItem.explanation)).request}
+            request={this.props.contracts.topicRegistry.registerTopic(
+                web3.utils.asciiToHex(this.data.newTopicItem.title),
+                web3.utils.asciiToHex(this.data.newTopicItem.explanation))
+              .request}
             usage='registerTopic'
             service='metagate'
             callbackUrl='none'
